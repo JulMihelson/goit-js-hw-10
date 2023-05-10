@@ -11,6 +11,11 @@ const countryInfoCard = document.querySelector('.country-info');
 input.addEventListener(
   'input',
   debounce(event => {
+    if (!event.target.value.trim()) {
+      ul.innerHTML = '';
+      countryInfoCard.innerHTML = '';
+      return;
+    }
     fetchCountries(event.target.value.trim())
       .then(getData)
       .catch(error => {
@@ -21,8 +26,8 @@ input.addEventListener(
 
 function getData(data) {
   if (data.length > 10) {
-    countryInfoCard.innerHTML = ' ';
-    ul.innerHTML = ' ';
+    countryInfoCard.innerHTML = '';
+    ul.innerHTML = '';
     Notify.info('Too many matches found. Please enter a more specific name.');
   }
   if (data.length <= 10 && data.length >= 2) {
@@ -33,9 +38,11 @@ function getData(data) {
       );
     }, '');
     ul.innerHTML = html;
+    countryInfoCard.innerHTML = '';
   }
   if (data.length === 1) {
     countryInfoCard.innerHTML = data.map(generateCountryInfoCard).join('');
+    ul.innerHTML = '';
   }
 }
 
